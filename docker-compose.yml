@@ -1,0 +1,14 @@
+version: '3'
+services:
+    otp:
+        build: .
+        container_name: otpapp        
+        ports:
+            - 9090:8080
+        links:
+            - "redis:redis"        			
+    redis:
+        build: ./redis/
+        container_name: myredis        
+        ports:
+            - "6379:6379" 

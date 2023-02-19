@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %5p --- [%15.15t] %-40.40c{1.} : %m%n%ex
+        </Property>
+        <Property name="loggingFolder">
+            logs
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="LogFileAppender" fileName="${sys:loggingFolder}/app.log"
+                     filePattern="${sys:loggingFolder}/engine-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="30MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+		
+        <RollingFile name="ErrorFileAppender" fileName="${sys:loggingFolder}/app.err"
+                     filePattern="${sys:loggingFolder}/engine-%d{yyyy-MM-dd}-%i.err">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="15MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+     
+    </Appenders>
+
+       <Loggers>
+        <AsyncLogger name="com.yea" level="info"
+                     additivity="false">
+            <AppenderRef ref="LogFileAppender" />
+            <AppenderRef ref="ErrorFileAppender" />
+			 <AppenderRef ref="ConsoleAppender" />
+
+        </AsyncLogger>
+
+        
+        <Root level="info">
+            <AppenderRef ref="LogFileAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+    </Loggers>
+</Configuration>
